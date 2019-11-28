@@ -1,0 +1,32 @@
+---
+# Config yum zsmart repo
+
+- name: Invalidate the old repo
+  shell: cd /etc/yum.repos.d/ && rename '.repo' '.back' *
+
+- name: add ztesoft yum repo zsmart-base.repo
+  template:
+    src: zsmart-base.repo
+    dest: /etc/yum.repos.d/zsmart-base.repo
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: add zcm yum repo zcm-custom.repo
+  template:
+    src: zcm-custom.repo
+    dest: /etc/yum.repos.d/zcm-custom.repo
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: clean
+  shell: yum clean all
+
+- name: makecache
+  shell: yum makecache
+
+- name: modify the gpgcheck
+  shell: sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.conf  

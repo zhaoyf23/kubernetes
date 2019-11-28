@@ -1,0 +1,29 @@
+[program:zcm-openresty]
+command=/bin/bash -c \
+    '. /zcm/supervisor/zcm-env.profile; \
+    [ `docker ps -a -f "name=zcm-openresty"| wc -l` -gt 1 ] && \
+    exec docker start -a zcm-openresty || \
+    docker run --name zcm-openresty \
+        -v /zcm/node-proxy/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf \
+        --restart=on-failure:5 \
+        --memory=512M \
+        --net=host \
+        -e CLOUD_APP_NAME=paas_zcm-node-proxy \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /etc/timezone:/etc/timezone:ro \
+        -v /tmp/zlogs:/tmp/zlogs \
+        -v /tmp/zcore:/tmp/zcore \
+        -d \
+        ${ZCM_HARBOR}/${ZCM_HARBOR_PROJECT}/zcm-openresty:${ZCM_NODE_PROXY_TAG}; \
+    exec docker start -a zcm-openresty'
+process_name= zcm-openresty
+numprocs=1
+autostart=true
+autorestart=true
+startretries = 6
+user=root
+stdout_logfile=/var/log/zcm/zcm-openresty.log
+stdout_logfile_maxbytes=10MB
+stderr_logfile=/var/log/zcm/zcm-openresty.log
+stderr_logfile_maxbytes=10MB
+stopwaitsecs=20

@@ -1,0 +1,38 @@
+---
+#install  supervisor
+
+- name: install supervisor
+  yum: name=supervisor  state=present
+
+- name: configure supervisor
+  copy:
+    src: supervisord.conf
+    dest: /etc/supervisord.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: mkdir zcm-dir for zcm-ini
+  shell: mkdir -p /zcm/supervisor
+
+- name: mkdir zcm-dir for zcm-log
+  shell: mkdir -p /var/log/zcm
+
+- name: start supervisor
+  service: name=supervisord enabled=yes state=started
+
+- name: zcm-config
+  copy: src=zcm-config.ini  dest=/zcm/supervisor/zcm-config.ini  owner=root group=root  mode=0644 backup=yes
+
+- name: zcm-file-manager.ini
+  copy: src=zcm-file-manager.ini  dest=/zcm/supervisor/zcm-file-manager.ini  owner=root group=root  mode=0644 backup=yes
+
+- name: zcm-env.profile
+  copy: src=profile/zcm-env.profile  dest=/zcm/supervisor/zcm-env.profile  owner=root group=root  mode=0644 backup=yes
+  
+- name: zcm-env-cluster.profile
+  copy: src=profile/zcm-env-cluster.profile  dest=/zcm/supervisor/zcm-env-cluster.profile  owner=root group=root  mode=0644 backup=yes
+
+- name: zcm-env-base.profile
+  copy: src=profile/zcm-env-base.profile  dest=/zcm/supervisor/zcm-env-base.profile  owner=root group=root  mode=0644 backup=yes

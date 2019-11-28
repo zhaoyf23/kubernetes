@@ -1,0 +1,9 @@
+---
+# delete all about k8s' info
+
+- hosts: kube-masters:kube-nodes
+  become: yes
+  roles:
+    - delete
+     
+    

@@ -1,0 +1,13 @@
+---
+
+ #clean node
+- name: stop client executable programs
+  yum: name={{ item }} 
+  state: stopped
+  with_items:
+    - kubectl
+    - kubelet
+    - kube-proxy
+
+-name: clean directory
+ shell: rm -rf /etc/kubernetes/*

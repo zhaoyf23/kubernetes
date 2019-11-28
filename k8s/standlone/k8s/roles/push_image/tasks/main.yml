@@ -1,0 +1,61 @@
+---
+
+- name: login registry {{docker_registry_url}}
+  shell: docker login {{docker_registry_url}} -u admin --password {{zcm_harbor_admin_password}}
+
+- name: load k8s images
+  shell: docker load < /root/zcm-images-store/images/k8s/{{item}}
+  with_items:
+  - cni_v1.11.0.tar
+  - kube-apiserver-amd64_v1.8.3.tar
+  - kube-controller-manager-amd64_v1.8.3.tar
+  - kube-controllers_v1.0.0.tar
+  - kube-proxy-amd64_v1.8.3.tar
+  - kube-scheduler-amd64_v1.8.3.tar
+  - node_v2.6.2.tar
+  - pause-amd64_3.0.tar
+  - zcm-openresty.tar
+  - heapster-grafana-amd64_v4.4.3.tar
+  - heapster-zcm-centos.tar
+  - k8s-dns-sidecar-amd64_1.14.7.tar
+  - k8s-dns-dnsmasq-nanny-amd64_1.14.7.tar
+  - cluster-proportional-autoscaler-amd64_1.1.1.tar
+  - k8s-dns-kube-dns-amd64_1.14.7.tar
+ 
+- name: tag k8s images
+  command: docker tag {{item.name}}  {{docker_registry_url}}/{{item.project}}/{{item.name}}
+  with_items:
+  - {project: 'zcm_k8s',name: 'heapster-grafana-amd64:v4.4.3'}
+  - {project: 'zcm_k8s',name: 'heapster-zcm-centos:20181224'}
+  - {project: 'zcm_k8s',name: 'k8s-dns-sidecar-amd64:1.14.7'}
+  - {project: 'zcm_k8s',name: 'k8s-dns-dnsmasq-nanny-amd64:1.14.7'}
+  - {project: 'zcm_k8s',name: 'cluster-proportional-autoscaler-amd64:1.1.1'}
+  - {project: 'zcm_k8s',name: 'k8s-dns-kube-dns-amd64:1.14.7'}
+  - {project: 'zcm_k8s',name: 'kube-apiserver-amd64:v1.8.3'}
+  - {project: 'zcm_k8s',name: 'kube-controller-manager-amd64:v1.8.3'}
+  - {project: 'zcm_k8s',name: 'pause-amd64:3.0'}
+  - {project: 'zcm_k8s',name: 'kube-proxy-amd64:v1.8.3'}
+  - {project: 'zcm_k8s',name: 'kube-scheduler-amd64:v1.8.3'}
+  - {project: 'zcm_calico',name: 'node:v2.6.2'}
+  - {project: 'zcm_calico',name: 'kube-controllers:v1.0.0'}
+  - {project: 'zcm_calico',name: 'cni:v1.11.0'} 
+  - {project: 'zcm9',name: 'zcm-openresty:1.13.6.2'}
+
+- name: push k8s images
+  command: docker push {{docker_registry_url}}/{{item.project}}/{{item.name}}
+  with_items:
+  - {project: 'zcm_k8s',name: 'heapster-grafana-amd64:v4.4.3'}
+  - {project: 'zcm_k8s',name: 'heapster-zcm-centos:20181224'}
+  - {project: 'zcm_k8s',name: 'k8s-dns-sidecar-amd64:1.14.7'}
+  - {project: 'zcm_k8s',name: 'k8s-dns-dnsmasq-nanny-amd64:1.14.7'}
+  - {project: 'zcm_k8s',name: 'cluster-proportional-autoscaler-amd64:1.1.1'}
+  - {project: 'zcm_k8s',name: 'k8s-dns-kube-dns-amd64:1.14.7'}
+  - {project: 'zcm_k8s',name: 'kube-apiserver-amd64:v1.8.3'}
+  - {project: 'zcm_k8s',name: 'kube-controller-manager-amd64:v1.8.3'}
+  - {project: 'zcm_k8s',name: 'pause-amd64:3.0'}
+  - {project: 'zcm_k8s',name: 'kube-proxy-amd64:v1.8.3'}
+  - {project: 'zcm_k8s',name: 'kube-scheduler-amd64:v1.8.3'}
+  - {project: 'zcm_calico',name: 'node:v2.6.2'}
+  - {project: 'zcm_calico',name: 'kube-controllers:v1.0.0'}
+  - {project: 'zcm_calico',name: 'cni:v1.11.0'} 
+  - {project: 'zcm9',name: 'zcm-openresty:1.13.6.2'}

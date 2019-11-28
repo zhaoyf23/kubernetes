@@ -1,0 +1,19 @@
+---
+
+- name: create the zcm_tmp directory 
+  file: path=/root/zcm_tmp state=directory mode=0755 
+ 
+- name: cp config-k8s-client.sh to remote hosts		
+  template:  src={{ item }} dest=/root/zcm_tmp/ owner=root group=root mode=0755
+  with_items:
+    - config-k8s-kubelet.sh
+
+# Configure kubelet to support automatic certificate renewal  
+- name: run a shell to Configure kubelet to support automatic certificate renewal    
+  shell: cd /root/zcm_tmp && ./config-k8s-kubelet.sh 
+
+- name: reload the kubelet service
+  systemd: name=kubelet state=restarted  daemon_reload=yes
+
+#- name: restart the kubelet service
+#  service: name=kubelet state=restarted           

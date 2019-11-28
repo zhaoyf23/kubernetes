@@ -1,0 +1,57 @@
+##### common #####
+#export ZCM_HARBOR=172.16.82.84:52800
+export ZCM_HARBOR=10.45.80.1
+export ZCM_HARBOR_PROJECT=zcm9
+
+##### zcamp rest server #####
+export ZCM_ZCAMP_REST_SERVER_PORT=52876
+export ZCM_ZCAMP_REST_SERVER_TAG="C_20190829084835"
+
+export ZCM_REST_SERVER_PORT=8781
+export ZCM_REST_SERVER_TAG=1.0.2
+
+##### zcamp rest server #####
+export ZCM_ZCAMP_ANSIBLE_SERVER_PORT=52780
+export ZCM_ANSIBLE_TAG="C_20190829084846"
+
+##### zcamp web server #####
+export ZCM_ZCAMP_SERVER_IP=172.16.17.122
+export ZCM_ZCAMP_SERVER_PORT=52860
+
+##### portal mysql master #####
+export ZCM_MYSQL_VIP=172.16.17.122
+export ZCM_MYSQL_TAG=5.7.25
+export ZCM_MYSQL_PORT=52306
+export ZCM_MYSQL_USER=root
+export ZCM_MYSQL_PASSWORD=abc@123A
+
+# redis
+export ZCM_REDIS_TAG="3.2.12"
+export ZCM_REDIS_PORT="52379"
+export ZCM_REDIS_PASSWORD="abc@123A"
+export ZCM_REDIS_SERVER_LIST="172.16.17.122:52379"
+
+# nginx
+export ZCM_NGINX_TAG="1.15.8.1_20190806"
+export ZCM_NGINX_PORT="52000"
+export ZCM_SERVER_PORT="52000"
+export ZCM_SERVER_VIP="172.16.17.122"
+
+# portal
+#export ZCM_PORTAL_TAG="C_20190708142904"
+#export ZCM_PORTAL_TAG="C_20190729205547"
+export ZCM_PORTAL_TAG="C_20190829184408"
+export ZCM_PORTAL_PORT="52060"
+
+# cmdb
+export ZCM_CMDB_PORT="52835"
+export ZCM_CMDB_TAG="C_20190904165029"
+
+# tool
+export ZCM_TOOL_PORT="52981"
+# export ZCM_TOOL_TAG="D_20190730162334"
+export ZCM_TOOL_TAG="C_20190829092811"
+export ZCM_API_GATEWAY=http://"172.16.17.122":"52000"
+# add at 20190704162053,version: 9.0.5_20190703
+export ZCM_APM_INIT="http://${ZCM_SERVER_VIP}:52000/httpfiles/itracing/apm.sh"
+export ZCM_ZCAMP_TAG="C_20190830225235"

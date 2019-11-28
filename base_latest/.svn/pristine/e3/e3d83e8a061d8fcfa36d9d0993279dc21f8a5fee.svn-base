@@ -1,0 +1,37 @@
+---
+#install  supervisor
+
+- name: install supervisor
+  yum: name=supervisor  state=present
+
+- name: configure supervisord.conf
+  copy:
+    src: supervisord.conf
+    dest: /etc/supervisord.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: configure supervisord.service
+  copy:
+    src: supervisord.service
+    dest: /usr/lib/systemd/system/supervisord.service
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: mkdir zcm-dir for zcm-ini
+  file: path=/zcm/supervisor state=directory mode=0755
+  ignore_errors: yes
+
+- name: mkdir zcm-dir for zcm-log
+  file: path=/var/log/zcm state=directory mode=0755
+  ignore_errors: yes
+
+- name: start supervisor
+  service: name=supervisord enabled=yes state=started
+
+- name: daemon-reload
+  command: systemctl daemon-reload

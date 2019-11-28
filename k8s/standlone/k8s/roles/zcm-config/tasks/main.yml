@@ -1,0 +1,10 @@
+---
+
+- name: import supervisorctl config
+  copy:
+    src: zcm-config.ini
+    dest: /zcm/supervisor/zcm-config.ini
+- name: start zcm-config
+  supervisorctl:
+    name: zcm-config
+    state: present

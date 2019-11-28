@@ -1,0 +1,44 @@
+---
+# This playbook install k8s and it's component dns ,docker network 
+
+- hosts: 127.0.0.1
+  become: yes
+  roles:
+    - gen_cert
+
+- hosts: kube-masters:kube-nodes
+  become: yes
+  roles:
+    - init_all_systems
+    - install_supervisor
+     
+    
+- hosts: etcd-nodes 
+  become: yes
+  roles:
+    - install_etcd_cluster
+   
+- hosts: kube-masters 
+  become: yes
+  roles:
+    - install_masters
+    - install_master_proxy
+    - config_apiserver
+
+- hosts: kube-nodes 
+  become: yes
+  roles:
+    - install_proxy  
+    - install_nodes
+
+- hosts: kube-masters[0]
+  become: yes
+  roles:
+    - approve_nodes_cert
+    - install_network
+    - install_dns
+
+- hosts: all
+  become: yes
+  roles:
+   - custom_nodes_role    

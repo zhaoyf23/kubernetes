@@ -1,0 +1,4 @@
+bri_cidr: 100.81.0.1/22
+harbor_registry: 172.16.82.101
+zcm_harbor_master_ip: 172.16.82.101
+zcm_harbor_backup_ip: 172.16.82.101

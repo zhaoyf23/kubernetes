@@ -1,0 +1,8 @@
+---
+
+
+- name: label the master role 
+  command: /usr/local/bin/kubectl --server=http://{{kube_master1_ip}}:{{apiserver_insecure_port}}  label node {{ansible_ssh_host}} zcm.role=k8s
+  ignore_errors: yes    
+   
+ 

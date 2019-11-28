@@ -1,0 +1,110 @@
+#install k8s nodes
+
+#- name: rename the hostname
+#  command: hostnamectl set-hostname {{ansible_ssh_host}}
+
+- name: zcm-config
+  copy: src=zcm-config.ini  dest=/zcm/supervisor/zcm-config.ini  owner=root group=root  mode=0644 backup=yes
+
+- name: zcm-file-manager.ini
+  copy: src=zcm-file-manager.ini  dest=/zcm/supervisor/zcm-file-manager.ini  owner=root group=root  mode=0644 backup=yes
+
+- name: zcm-env.profile
+  copy: src=profile/zcm-env.profile  dest=/zcm/supervisor/zcm-env.profile  owner=root group=root  mode=0644 backup=yes
+  
+- name: zcm-env-cluster.profile
+  copy: src=profile/zcm-env-cluster.profile  dest=/zcm/supervisor/zcm-env-cluster.profile  owner=root group=root  mode=0644 backup=yes
+
+- name: zcm-env-base.profile
+  copy: src=profile/zcm-env-base.profile  dest=/zcm/supervisor/zcm-env-base.profile  owner=root group=root  mode=0644 backup=yes
+
+- name: update supervisor
+  command: supervisorctl update
+
+- name: install client executable programs
+  yum: name={{ item }}  state=present
+  with_items:
+    - conntrack-tools
+    - kubectl
+    - kubelet
+    - kube-proxy
+
+
+- name: create the certificate directory
+  file: path=/etc/kubernetes/ssl state=directory mode=0755
+  
+
+- name: copy the kubeconfigs' file
+  copy:  src={{ item }}  dest=/etc/kubernetes  owner=root group=root mode=0644
+  with_items:
+    - kubeconfig/bootstrap.kubeconfig
+    - kubeconfig/kube-proxy.kubeconfig
+    
+
+- name: copy the kubeconfigs' file
+  copy:  src={{ item }}  dest=/etc/kubernetes/ssl  owner=root group=root mode=0644
+  with_items:
+    - ssl/admin-key.pem
+    - ssl/ca-key.pem
+    - ssl/etcd-key.pem
+    - ssl/kube-proxy-key.pem
+    - ssl/kubernetes-key.pem
+    - ssl/admin.pem
+    - ssl/ca.pem
+    - ssl/etcd.pem
+    - ssl/kube-proxy.pem
+    - ssl/kubernetes.pem
+    
+
+
+- name: create the k8s master's services
+  template:  src={{ item }}  dest=/etc/systemd/system/  owner=root   group=root   mode=0755
+  with_items:
+    - kubelet.service
+    - kube-proxy.service
+    
+
+
+- name: create kubelet work directory
+  file: path=/var/lib/kubelet state=directory mode=0755
+  
+- name: create  kube-proxy work directory
+  file: path=/var/lib/kube-proxy state=directory mode=0755
+
+- name: copy zcm-openresty.ini
+  copy: 
+    src: zcm-openresty.ini
+    dest: /zcm/supervisor/
+
+- name: mkdir
+  shell: mkdir -p /zcm/node-proxy/
+
+- name: copy nginx.conf 
+  copy:
+    src: nginx.conf
+    dest: /zcm/node-proxy/nginx.conf
+
+- name: start
+  shell: supervisorctl update
+
+- name: daemon-reload
+  command: systemctl daemon-reload
+
+- name: Start the kubelet service
+  service: name=kubelet state=started enabled=yes
+
+- name: Start the kube-proxy service
+  service: name=kube-proxy state=started enabled=yes
+  
+
+- name: transfer shell to nodes
+  template:
+    src:  approve-client.sh
+    dest: /root/
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+
+- name: create kubelet and kube-proxy config for the master
+  shell: cd /root/ && ./approve-client.sh

@@ -1,0 +1,11 @@
+[Unit]
+Description= docker-volume-netshare server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/docker-volume-netshare nfs
+ExecReload=/usr/bin/killall docker-volume-netshare ; /usr/bin/docker-volume-netshare nfs
+ExecStop=/usr/bin/killall docker-volume-netshare
+[Install]
+WantedBy=multi-user.target

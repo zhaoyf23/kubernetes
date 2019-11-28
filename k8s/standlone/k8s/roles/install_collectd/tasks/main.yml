@@ -1,0 +1,41 @@
+---
+#install  the docker
+
+- name: install the collectd-write_http
+  yum: name=collectd-write_http  state=present
+
+- name: install collectd-disk
+  yum: name=collectd-disk  state=present
+
+- name: install collectd-ping
+  yum: name=collectd-ping  state=present
+
+- name: install the collectd-python
+  yum: name=collectd-python  state=present
+
+- name: install collectd-redis
+  yum: name=collectd-redis  state=present
+
+- name: install collectd-write_redis
+  yum: name=collectd-write_redis  state=present
+
+- name: configure the collectd 
+  copy:
+    src: collectd.conf
+    dest: /etc/collectd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: make collectd to be a service
+  copy:
+    src: collectd.service
+    dest: /usr/lib/systemd/system/collectd.service
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: start collectd.service service
+  service: name=collectd.service enabled=yes state=restarted 

@@ -1,0 +1,16 @@
+[zsmart-base]
+name=CentOS-$releasever-zsmart-base
+baseurl=http://10.45.58.66/centos/$releasever/os/$basearch/
+gpgcheck=0
+[zcm-updates]
+name=CentOS-$releasever-zsmart-updates
+baseurl=http://10.45.58.66/centos/$releasever/update/$basearch/
+gpgcheck=0
+[zcm-extras]
+name=CentOS-$releasever - zsmart-extras
+baseurl=http://10.45.58.66/centos/$releasever/extras/$basearch/
+gpgcheck=0
+[zcm-epel]
+name=CentOS-$releasever - zsmart-epel
+baseurl=http://10.45.58.66/epel/$releasever/$basearch/
+gpgcheck=0

@@ -1,0 +1,116 @@
+---
+# generate cert by cfss
+
+- name: install cfssl executable programs
+  yum: name={{ item }}  state=present
+  with_items:
+    - cfssl
+    - cfssl-certinfo
+    - cfssljson
+
+- name: remove the ssl directory  if it already exist
+  file: path=roles/init_all_systems/files/ssl state=absent  
+
+- name: remove the cert directory  if it already exist
+  file: path=roles/init_all_systems/files/cert state=absent      
+
+- name: create the cert directory
+  file: path=roles/init_all_systems/files/cert state=directory mode=0755
+  
+- name: create the ssl directory
+  file: path=roles/init_all_systems/files/ssl state=directory mode=0755
+ 
+  
+# config ca-config.json
+- name: config ca-config.json
+  template:
+    src:  ca-config.json
+    dest: roles/init_all_systems/files/cert/ca-config.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+    
+    
+# config ca-csr.json
+- name: config ca-csr.json
+  template:
+    src:  ca-csr.json
+    dest: roles/init_all_systems/files/cert/ca-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes    
+ 
+# config etcd-csr.json
+- name: etcd-csr.json
+  template:
+    src:  etcd-csr.json
+    dest: roles/init_all_systems/files/cert/etcd-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+      
+
+# config admin-csr.json -- for k8s
+- name: create admin-csr.json
+  template:
+    src:  admin-csr.json
+    dest: roles/init_all_systems/files/cert/admin-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+    
+- name: create kubernetes-csr.json
+  template:
+    src:  kubernetes-csr.json
+    dest: roles/init_all_systems/files/cert/kubernetes-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes  
+
+- name: create kube-proxy-csr.json
+  template:
+    src:  kube-proxy-csr.json
+    dest: roles/init_all_systems/files/cert/kube-proxy-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes     
+
+- name: create token.csv
+  template:
+    src:  token.csv
+    dest: roles/init_all_systems/files/ssl/token.csv
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes 
+          
+
+##############################
+# config etcd-csr.json
+- name: transfer gen-cert.sh
+  template:
+    src:  gen-cert.sh
+    dest: roles/init_all_systems/files/cert/gen-cert.sh
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+    
+# generate all the certs --generate certs 
+
+- name: run a shell to generate all the certs    
+  shell: cd roles/init_all_systems/files/cert && ./gen-cert.sh 
+ 
+- name: move all the pem files to ssl directory
+  shell: cd roles/init_all_systems/files/cert/ && mv *.pem ../ssl/
+
+- name: change perm of files in ssl directory 
+  file: dest=roles/init_all_systems/files/ssl mode=0655  recurse=yes
+
+          

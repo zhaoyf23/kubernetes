@@ -1,0 +1,14 @@
+# machines list in group
+[nodes]
+node1           ansible_ssh_host=10.45.80.82       ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node2           ansible_ssh_host=10.45.80.75       ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node3           ansible_ssh_host=10.45.80.77       ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node4           ansible_ssh_host=10.45.80.81       ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node3           ansible_ssh_host=172.16.80.175      ansible_ssh_user=root ansible_ssh_pass=nyztesoft$123
+#172.16.71.[45:50]
+#172.16.71.52
+#172.16.71.36
+#[nodes:vars]
+#ansible_ssh_user=root
+#ansible_ssh_pass=iwhalecloud$123
+#

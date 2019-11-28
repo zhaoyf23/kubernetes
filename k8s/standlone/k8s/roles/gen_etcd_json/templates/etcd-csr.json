@@ -1,0 +1,27 @@
+{
+  "CN": "etcd",
+  "hosts": [
+    "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
+    "{{kube_master_vip}}",
+    "{{kube_master1_ip}}",
+    "{{kube_master2_ip}}",
+    "{{etcd_node1_ip}}",
+    "{{etcd_node2_ip}}",
+    "{{etcd_node3_ip}}"
+  ],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "CN",
+      "ST": "JiangSu",
+      "L": "NanJing",
+      "O": "k8s",
+      "OU": "System"
+    }
+  ]
+}

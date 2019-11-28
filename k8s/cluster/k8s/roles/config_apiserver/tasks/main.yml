@@ -1,0 +1,14 @@
+---
+#install k8s master
+
+
+- name: custom the k8s master's services
+  template:  src=kube-apiserver.service  dest=/etc/systemd/system/  owner=root   group=root   mode=0755
+
+- name: daemon-reload
+  command: systemctl daemon-reload
+  
+- name: Start the kube-apiserver service
+  service: name=kube-apiserver state=started enabled=yes
+
+ 

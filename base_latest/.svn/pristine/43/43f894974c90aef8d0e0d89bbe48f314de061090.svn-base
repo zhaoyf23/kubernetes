@@ -1,0 +1,33 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: register vars
+      shell: lvs | grep thinpool | wc -l
+      register: info1
+    - name: display info1
+      debug: msg="{{info1.stdout}}"
+
+    - name: ok if thinpool exists
+      debug: msg="satisfied to install docker"
+      when: info1['stdout'] == "1"
+    - name: register vars if no thinpool
+      shell: vgs | grep vgdata | wc -l
+      register: info2
+      when: info1['stdout'] == "0"
+#    - name: display vars
+#      debug: msg="{{info2.stdout}}"
+
+    - name: check size
+      shell: vgs | grep vgdata | awk '{print $7}' | tr -cd "[0-9.]" | cut -d "." -f1
+      register: info3
+      when: info1['stdout'] == "0" and info2['stdout'] == "1"
+#    - name: display size
+#      debug: msg="{{info3.stdout}}"
+
+    - name: compare result ok
+      debug: msg="size ok"
+      when: info3['stdout'] >= "200"
+    - name: compare result not ok
+      debug: msg="size not ok"
+      when: info3['stdout'] < "200"

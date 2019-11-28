@@ -1,0 +1,18 @@
+---
+# generate cert by cfss
+
+
+# config etcd-csr.json
+- name: etcd-csr.json
+  template:
+    src:  etcd-csr.json
+    dest: /root/cert_for_{{prj}}/etcd-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+    
+  
+ 
+  
+

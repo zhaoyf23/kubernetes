@@ -1,0 +1,16 @@
+{
+ "storage-driver": "devicemapper",
+  "storage-opts": [
+    "dm.thinpooldev=/dev/mapper/vgdata-thinpool",
+    "dm.use_deferred_removal=true",
+    "dm.use_deferred_deletion=true"
+  ],
+  "bip": "{{bri_cidr}}",
+  "insecure-registries" : [ "10.45.80.1","{{harbor_registry}}", "{{zcm_harbor_master_ip}}" , "{{zcm_harbor_backup_ip}}" ],
+  "hosts" : ["tcp://127.0.0.1:52375","unix:///var/run/docker.sock"],
+  "live-restore": false,
+  "log-opts": {
+    "max-size": "100m",
+    "max-file":"3"
+  }
+}

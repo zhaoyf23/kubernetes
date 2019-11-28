@@ -1,0 +1,67 @@
+---
+#install base_components
+#- name: yum downgrade 
+#  shell: yum downgrade libgomp -y
+
+- name: install the kernel-devel
+  yum : name=kernel-devel state=present
+
+- name: install the dkms.noarch
+  yum : name=dkms.noarch state=present
+
+- name: install the sysdig
+  yum : name=sysdig state=present
+
+- name: install docker-python
+  yum : name=docker-python state=present
+
+- name: install the nfs-utils
+  yum: name=nfs-utils  state=present
+
+- name: install the glusterfs-utils
+  yum: name=glusterfs     state=present
+       name=glusterfs-fuse  state=present
+
+- name: install the docker-volume-netshare
+  yum: name=docker-volume-netshare  state=present
+
+- name: install the psmisc
+  yum: name=psmisc  state=present
+
+- name: make docker-volume-netshare to be a service
+  copy:
+    src: docker-volume-netshare.service
+    dest: /lib/systemd/system/docker-volume-netshare.service
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: enable docker-volume-netshare service
+  service: name=docker-volume-netshare  enabled=yes state=started
+
+- name: install the docker-compose
+  yum: name=docker-compose  state=present
+
+- name: install the ttyd
+  yum: name=ttyd  state=present
+
+- name: install the ttyd
+  yum: name=xinetd  state=present
+- name: judge 90-zcm.conf
+  shell: ls /etc/sysctl.d/90-zcm.conf
+  ignore_errors: True
+  register: result
+  
+- name: backup 90-zcm.conf
+  shell: mv -f /etc/sysctl.d/90-zcm.conf /etc/sysctl.d/90-zcm.backup
+  when: result|succeeded
+
+- name: judge system version
+  shell: cat /etc/redhat-release |grep 7.4
+  ignore_errors: True
+  register: version
+  
+- name: modify 90-zcm.conf
+  shell: echo "fs.may_detach_mounts=1" | tee -a /etc/sysctl.d/90-zcm.conf;echo "fs.inotify.max_user_watches=1048576" | tee -a /etc/sysctl.d/90-zcm.conf;echo "kernel.core_pattern=/tmp/zcore/core.%h~%e" | tee -a /etc/sysctl.d/90-zcm.conf;sysctl -f /etc/sysctl.d/90-zcm.conf
+  when: version|succeeded

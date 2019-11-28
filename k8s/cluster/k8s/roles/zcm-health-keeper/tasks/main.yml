@@ -1,0 +1,23 @@
+---
+- name: create directory
+  file: 
+    path: /zcm/health-keeper
+    state: directory
+
+- name: copy all-patch.tar.gz
+  copy: 
+    src: all-patch.tar.gz
+    dest: /zcm/health-keeper/all-patch.tar.gz 
+
+- name: tar zxvf
+  shell: chdir=/zcm/health-keeper/ tar zxvf all-patch.tar.gz
+  
+- name: import health-keeper config
+  copy: 
+    src: zcm-health-keeper.ini 
+    dest: /zcm/supervisor/zcm-health-keeper.ini
+
+- name: start zcm-health-keeper
+  supervisorctl:
+    name: zcm-health-keeper
+    state: present

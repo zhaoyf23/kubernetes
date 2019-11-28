@@ -1,0 +1,22 @@
+---
+# approve all the cert
+
+- name: create the zcm_tmp directory 
+  file: path=/root/zcm_tmp state=directory mode=0755 
+
+- name: transfer approve_certs.sh
+  template:
+    src:  approve_certs.sh
+    dest: /root/zcm_tmp/approve_certs.sh
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+    
+# approve all the certs 
+- name: run a shell to approve all the certs    
+  shell: /root/zcm_tmp/approve_certs.sh
+  ignore_errors: yes
+
+  
+  

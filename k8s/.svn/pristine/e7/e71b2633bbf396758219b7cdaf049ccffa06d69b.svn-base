@@ -1,0 +1,31 @@
+
+- name: stop client executable programs
+  service: name={{ item }}  state=stopped
+  with_items:
+    - kube-apiserver
+    - kubelet
+    - kube-proxy
+    - kube-controller-manager
+    - kube-scheduler
+  ignore_errors: yes
+  
+- name: clean kubelet directory
+  shell: rm -rf /etc/kubernetes/*
+  ignore_errors: yes
+ 
+ 
+- name: clean etcd directory
+  shell: etcdctl rm -r /calico
+  ignore_errors: yes
+  
+- name:  delete etcd
+  shell: export ETCDCTL_API=3;etcdctl del --prefix /
+  ignore_errors: yes
+  
+- name: stop
+  shell: systemctl stop etcd 
+  ignore_errors: yes
+  
+- name: delete etcd data
+  shell: rm -rf /var/lib/etcd/default.etcd/*
+  ignore_errors: yes

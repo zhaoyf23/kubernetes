@@ -1,0 +1,13 @@
+[program:zcm-health-keeper]
+command=/bin/bash -c '. /zcm/supervisor/zcm-env.profile;/bin/bash /zcm/health-keeper/zcm-health-keeper.sh'
+process_name= zcm-health-keeper
+numprocs=1
+autostart=true
+autorestart=true
+startretries = 6
+user=root
+stdout_logfile=/var/log/zcm/zcm-health-keeper.log
+stdout_logfile_maxbytes=10MB
+stderr_logfile=/var/log/zcm/zcm-health-keeper.log
+stderr_logfile_maxbytes=10MB
+stopwaitsecs=20

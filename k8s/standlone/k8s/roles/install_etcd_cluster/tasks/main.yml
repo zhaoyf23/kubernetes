@@ -1,0 +1,22 @@
+---
+#init the etcd musters
+
+
+- name: install etcd   
+  yum: name=etcd  state=present
+
+# config etcd cluster node
+- name: config /etc/etcd/etcd.conf
+  template:
+    src:  etcd-tpl.conf
+    dest: /etc/etcd/etcd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: enable etcd service
+  service: name=etcd  enabled=yes
+- name: start etcd service
+  service: name=etcd state=restarted
+

@@ -1,0 +1,14 @@
+---
+# This playbook install base_vm
+
+- hosts: nodes 
+  become: yes
+  roles:
+    - stop_firewalld
+    - config_timezone
+#    - docker_lvs
+    - config_yum
+    - install_docker
+    - install_base_components 
+    - install_supervisor
+    - install_collectd

@@ -1,0 +1,24 @@
+error_log stderr notice;
+
+worker_processes auto;
+events {
+  multi_accept on;
+  use epoll;
+  worker_connections 1024;
+}
+
+stream {
+    upstream kube_apiserver {
+        least_conn;
+        server 10.45.80.23:6443 max_fails=10 fail_timeout=180s;
+        server 10.45.80.24:6443 max_fails=10 fail_timeout=180s;
+        server 10.45.80.25:6443 max_fails=10 fail_timeout=180s;
+    }
+
+    server {
+        listen        0.0.0.0:6443;
+        proxy_pass    kube_apiserver;
+        proxy_timeout 10m;
+        proxy_connect_timeout 1s;
+    }
+}

@@ -1,0 +1,41 @@
+---
+# generate cert by cfss
+
+# config admin-csr.json
+- name: create admin-csr.json
+  template:
+    src:  admin-csr.json
+    dest: /root/cert_for_{{prj}}/admin-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+    
+- name: create kubernetes-csr.json
+  template:
+    src:  kubernetes-csr.json
+    dest: /root/cert_for_{{prj}}/kubernetes-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes  
+
+- name: create kube-proxy-csr.json
+  template:
+    src:  kube-proxy-csr.json
+    dest: /root/cert_for_{{prj}}/kube-proxy-csr.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes     
+
+- name: create token.csv
+  template:
+    src:  token.csv
+    dest: /root/cert_for_{{prj}}/ssl/token.csv
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes 
+    
+

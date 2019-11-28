@@ -1,0 +1,3 @@
+---
+- name: config timezone
+  shell: echo "Asia/Shanghai"> /etc/timezone

@@ -1,0 +1,17 @@
+---
+# install dns for k8s
+
+
+- name: cp dns config to the master
+  template:  src={{ item }} dest=/root/ owner=root group=root mode=0755
+  with_items:
+    - heapster-rbac.yaml
+    - heapster.yaml 
+
+- name: create calico rbac 
+  command: /usr/local/bin/kubectl apply -f {{item}}
+  with_items:
+    - /root/heapster-rbac.yaml
+    - /root/heapster.yaml
+
+ 

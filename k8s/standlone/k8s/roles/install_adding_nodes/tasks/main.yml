@@ -1,0 +1,54 @@
+---
+#install k8s nodes
+
+#Absolute path of mkdir 
+- shell: which mkdir
+  register: var
+- set_fact: var1="{{var.stdout}}"
+- debug: msg="{{var1}}"
+
+
+- name: install client executable programs
+  yum: name={{ item }}  state=present
+  with_items:
+    - conntrack-tools
+    - kubectl
+    - kubelet
+    - kube-proxy
+  
+- name: transfer shell to masters
+  template:
+    src:  k8s-cfg-client.sh
+    dest: /root/
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes    
+
+- name: create kubelet and kube-proxy config for the master
+  shell: cd /root/ && ./k8s-cfg-client.sh
+
+- name: create the kubelet work directory
+  file: path=/var/lib/kubelet state=directory mode=0755
+
+- name: create the kube-proxy work directory
+  file: path=/var/lib/kube-proxy state=directory mode=0755   
+  
+- name: create the k8s master's services
+  template:  src={{ item }}  dest=/etc/systemd/system/  owner=root   group=root   mode=0755
+  with_items:
+    - kubelet.service
+    - kube-proxy.service
+
+- name: daemon-reload
+  command: systemctl daemon-reload
+
+- name: Start the kubelet service
+  service: name=kubelet state=started enabled=yes  
+ 
+- name: Start the kube-proxy service
+  service: name=kube-proxy state=started enabled=yes  
+
+
+  
+ 

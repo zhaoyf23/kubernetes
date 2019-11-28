@@ -1,0 +1,10 @@
+[zcm-custom]
+name=Zcm custom repository
+baseurl=http://10.45.58.66/zcm-custom/centos/$releasever/$basearch/
+enabled=1
+gpgcheck=0
+[dockerrepo]
+name=Docker Repository
+baseurl=http://10.45.58.66/docker-repo/centos/$releasever/$basearch/
+enabled=1
+gpgcheck=0

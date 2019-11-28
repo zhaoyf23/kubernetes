@@ -1,0 +1,22 @@
+# machines list in group
+
+[kube-masters]
+kube_master ansible_ssh_host={{k8s_master_ip}} ansible_ssh_user=root ansible_ssh_pass=abc@123A
+
+[nodes]
+node1 ansible_ssh_host=172.16.24.190   ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node2 ansible_ssh_host=172.16.82.140   ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node3 ansible_ssh_host=172.16.82.141   ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node4 ansible_ssh_host=172.16.25.99  ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node2 ansible_ssh_host=172.16.25.64  ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node3 ansible_ssh_host=172.16.25.61  ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node4 ansible_ssh_host=172.16.25.62  ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node4 ansible_ssh_host=172.16.24.231 ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node5 ansible_ssh_host=172.16.24.26  ansible_ssh_user=root ansible_ssh_pass=1jian8Shu)
+#node6 ansible_ssh_host=172.16.24.29  ansible_ssh_user=root ansible_ssh_pass=1jian8Shu)
+#172.16.25.[120:125]
+#172.16.71.[45:50]
+#172.16.71.52
+#[nodes:vars]
+#ansible_ssh_user=root
+#ansible_ssh_pass=iwhalecloud$123

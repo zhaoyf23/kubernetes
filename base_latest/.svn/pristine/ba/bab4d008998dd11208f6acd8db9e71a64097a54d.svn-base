@@ -1,0 +1,71 @@
+---
+- name: lvm
+  shell: yum -y install lvm2
+
+- name: pv
+  shell: pvcreate /dev/sdb
+
+- name: vg
+  shell: vgcreate vgdata /dev/sdb
+
+- name: create vgdata
+  shell: lvcreate --wipesignatures y -n thinpool vgdata  -L 250G 
+  ignore_errors: yes
+- name: create thinpoolmeta
+  shell: lvcreate --wipesignatures y -n thinpoolmeta vgdata -L 4G
+  ignore_errors: yes
+- name: create poolmetadata
+  shell: lvconvert -y --zero n -c 512K --thinpool vgdata/thinpool --poolmetadata vgdata/thinpoolmeta
+  ignore_errors: yes
+- name: create directory
+  file:
+    path: /etc/lvm/profile
+    state: directory
+
+- name: config docker lvs
+  template:
+    src: vgdata-thinpool.profile
+    dest: /etc/lvm/profile/vgdata-thinpool.profile
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: config zcore
+  shell: lvcreate -L 20g vgdata  -n lvzcore 
+  ignore_errors: yes
+
+- name: config zlogs
+  shell: lvcreate -L 20g vgdata  -n lvzlogs
+  ignore_errors: yes
+
+- name: config zcm
+  shell: lvcreate -L 40g vgdata  -n lvzcm
+  ignore_errors: yes
+
+
+- name: mkdir /tmp/zcore
+  shell: mkdir /tmp/zcore && mkdir /tmp/zlogs && mkdir /zcm
+  ignore_errors: yes
+
+- name: mkfs.xfs  /dev/vgdata/lvzcore
+  shell: mkfs.xfs  /dev/vgdata/lvzcore
+  ignore_errors: yes
+
+- name: mkfs.xfs  /dev/vgdata/lvzlogs
+  shell: mkfs.xfs  /dev/vgdata/lvzlogs
+  ignore_errors: yes
+
+- name: mkfs.xfs  /dev/vgdata/lvzcm
+  shell: mkfs.xfs  /dev/vgdata/lvzcm
+  ignore_errors: yes
+
+- name: config fstab
+  shell: echo "/dev/mapper/vgdata-lvzcore /tmp/zcore xfs defaults 0 0" >>/etc/fstab && echo "/dev/mapper/vgdata-lvzlogs /tmp/zlogs xfs defaults 0 0" >>/etc/fstab &&  echo "/dev/mapper/vgdata-lvzcm /zcm xfs defaults 0 0">>/etc/fstab
+  ignore_errors: yes
+
+- name: mount 
+  shell: mount -a
+  ignore_errors: yes
+
+

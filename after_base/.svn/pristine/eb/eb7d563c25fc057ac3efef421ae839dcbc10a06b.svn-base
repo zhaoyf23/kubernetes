@@ -1,0 +1,12 @@
+---
+# This playbook install base_vm
+
+- hosts: nodes
+  remote_user: root
+  become: root
+  roles:
+    - install_nodes
+    - change-pod
+    - zcm-health-keeper
+    - k8s-client-rotate
+

@@ -1,0 +1,53 @@
+---
+# Install  and install ftp & telnet for ubuntu14
+
+
+- name: disable SELinux
+  selinux:
+    state: disabled
+    
+#- name: stop service firewalld, if running
+#  service: name=firewalld state=stopped
+  
+#- name: modify the hostname
+#  command: hostnamectl set-hostname {{ ansible_default_ipv4.address }} --static
+#  ignore_errors: yes
+
+#- name: remove the kubernetes directory  if it already exist
+#  file: path=/etc/kubernetes state=absent
+
+- name: config k8s.conf for all nodes
+  copy:  src=k8s.conf  dest=/etc/sysctl.d/  owner=root   group=root   mode=0755
+  
+- name: create the ssl directory for all nodes
+  file: path=/etc/kubernetes/ssl state=directory mode=0755   
+  
+- name: cp token.csv for all nodes
+  copy:  src=ssl/token.csv  dest=/etc/kubernetes/  owner=root group=root mode=0755 force=yes
+  
+- name: cp all certs to remote machine for all nodes
+  copy:  src={{ item }}  dest=/etc/kubernetes/ssl  owner=root group=root mode=0755 force=yes
+  with_items:
+    - ssl/ca.pem
+    - ssl/admin.pem
+    - ssl/kube-proxy.pem
+    - ssl/kubernetes.pem  
+    - ssl/ca-key.pem
+    - ssl/admin-key.pem
+    - ssl/etcd-key.pem
+    - ssl/kube-proxy-key.pem
+    - ssl/kubernetes-key.pem
+    
+
+- name: pull all the calico  images for all nodes
+  command: docker pull {{item}}
+  with_items: 
+    - " {{docker_registry_url}}/zcm_calico/node:v2.6.2 "  
+    - " {{docker_registry_url}}/zcm_calico/cni:v1.11.0  "  
+    - " {{docker_registry_url}}/zcm_calico/kube-controllers:v1.0.0 " 
+      
+    
+    
+
+
+

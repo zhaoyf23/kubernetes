@@ -1,0 +1,32 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory=/var/lib/kubelet
+ExecStart=/usr/local/bin/kubelet \
+  --bootstrap-kubeconfig=/etc/kubernetes/bootstrap.kubeconfig \
+  --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
+  --address={{ansible_ssh_host}} \
+  --hostname-override={{ansible_ssh_host}} \
+  --pod-infra-container-image=10.45.80.1/zcm_k8s/pause-amd64:3.0 \
+  --cert-dir=/etc/kubernetes/ssl \
+  --cluster-dns=172.18.160.2 \
+  --cluster-domain=zsmart.com. \
+  --hairpin-mode=promiscuous-bridge \
+  --allow-privileged=true \
+  --serialize-image-pulls=false \
+  --logtostderr=true \
+  --cgroup-driver=cgroupfs \
+  --fail-swap-on=false \
+  --network-plugin=cni \
+  --feature-gates=RotateKubeletClientCertificate=true,RotateKubeletServerCertificate=true \
+  --rotate-certificates=true \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

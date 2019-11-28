@@ -1,0 +1,99 @@
+---
+- name: create vgdata
+  shell: lvcreate --wipesignatures y -n thinpool vgdata  -L 50G 
+  ignore_errors: yes
+- name: create thinpoolmeta
+  shell: lvcreate --wipesignatures y -n thinpoolmeta vgdata -L 4G
+  ignore_errors: yes
+- name: create poolmetadata
+  shell: lvconvert -y --zero n -c 512K --thinpool vgdata/thinpool --poolmetadata vgdata/thinpoolmeta
+  ignore_errors: yes
+
+- name: config zcore
+  shell: lvcreate -L 10g vgdata  -n lvzcore 
+  ignore_errors: yes
+- name: config zlogs
+  shell: lvcreate -L 10g vgdata  -n lvzlogs
+  ignore_errors: yes
+- name: config zcm
+  shell: lvcreate -L 10g vgdata  -n lvzcm
+  ignore_errors: yes
+- name: config lvzpaas
+  shell: lvcreate -L 10g vgdata  -n lvzpaas
+  ignore_errors: yes
+- name: config lvzpaasssd
+  shell: lvcreate -L 10g vgdata  -n lvzpaasssd
+  ignore_errors: yes
+
+- name: create /tmp/zcore
+  file: path=/tmp/zcore state=directory mode=0755
+  ignore_errors: yes
+- name: create /tmp/zlogs
+  file: path=/tmp/zlogs state=directory mode=0755
+  ignore_errors: yes
+- name: create /zcm
+  file: path=/zcm state=directory mode=0755
+  ignore_errors: yes
+- name: create /zpaas
+  file: path=/zpaas state=directory mode=0755
+  ignore_errors: yes
+- name: create /zpaasssd
+  file: path=/zpaasssd state=directory mode=0755
+  ignore_errors: yes
+
+- name: mkfs.xfs  /dev/mapper/vgdata-lvzcore
+  shell: mkfs.xfs  /dev/mapper/vgdata-lvzcore
+  ignore_errors: yes
+- name: mkfs.xfs  /dev/mapper/vgdata-lvzlogs
+  shell: mkfs.xfs  /dev/mapper/vgdata-lvzlogs
+  ignore_errors: yes
+- name: mkfs.xfs  /dev/mapper/vgdata-lvzcm
+  shell: mkfs.xfs  /dev/mapper/vgdata-lvzcm
+  ignore_errors: yes
+- name: mkfs.xfs  /dev/mapper/vgdata-lvzpaas
+  shell: mkfs.xfs  /dev/mapper/vgdata-lvzpaas
+  ignore_errors: yes
+- name: mkfs.xfs  /dev/mapper/vgdata-lvzpaasssd
+  shell: mkfs.xfs  /dev/mapper/vgdata-lvzpaasssd
+  ignore_errors: yes
+
+- name: mount /tmp/zcore
+  mount:
+    fstype: xfs
+    src: /dev/mapper/vgdata-lvzcore
+    path: /tmp/zcore
+    state: mounted
+  ignore_errors: yes
+- name: mount /tmp/zlogs
+  mount:
+    fstype: xfs
+    src: /dev/mapper/vgdata-lvzlogs
+    path: /tmp/zlogs
+    state: mounted
+  ignore_errors: yes
+- name: mount /zcm
+  mount:
+    fstype: xfs
+    src: /dev/mapper/vgdata-lvzcm
+    path: /zcm
+    state: mounted
+  ignore_errors: yes
+- name: mount /paas
+  mount:
+    fstype: xfs
+    src: /dev/mapper/vgdata-lvzpaas
+    path: /paas
+    state: mounted
+  ignore_errors: yes
+- name: mount /paasssd
+  mount:
+    fstype: xfs
+    src: /dev/mapper/vgdata-lvzpaasssd
+    path: /paasssd
+    state: mounted
+  ignore_errors: yes
+
+- name: config fstab
+  shell: echo "/dev/mapper/vgdata-lvzcore /tmp/zcore xfs defaults 0 0" >>/etc/fstab && echo "/dev/mapper/vgdata-lvzlogs /tmp/zlogs xfs defaults 0 0" >>/etc/fstab &&  echo "/dev/mapper/vgdata-lvzcm /zcm xfs defaults 0 0">>/etc/fstab && echo "/dev/mapper/vgdata-lvzpaas /zpaas xfs defaults 0 0" >>/etc/fstab &&  echo "/dev/mapper/vgdata-lvzcm /zpaasssd xfs defaults 0 0">>/etc/fstab
+  ignore_errors: yes
+

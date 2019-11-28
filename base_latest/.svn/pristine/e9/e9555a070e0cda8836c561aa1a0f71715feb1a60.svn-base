@@ -1,0 +1,123 @@
+yum_repo_addr: 10.45.58.66
+bri_cidr: 100.81.0.1/22
+
+ntp_ip: 10.45.40.188
+ipip_mode: "always"
+
+#### install harbor config ####
+
+zcm_harbor_vip: 172.16.82.101
+zcm_portal_vip: 172.16.82.100
+zcm_mysql_vip: 172.16.82.100
+
+
+ansible_host_ip: 172.16.17.63
+ansible_host_password: abc@123A
+
+zcm_harbor_master_ip: 172.16.82.101
+zcm_harbor_master_password: abc@123A
+
+zcm_harbor_backup_ip: 172.16.82.101
+zcm_harbor_backup_password: abc@123A
+
+zcm_k8s_node1_ip: 172.16.82.102
+zcm_k8s_node1_password: abc@123A
+
+zcm_k8s_node2_ip: 172.16.82.103
+zcm_k8s_node2_password: abc@123A
+
+zcm_k8s_node3_ip: 172.16.82.100
+zcm_k8s_node3_password: abc@123A
+
+zcm_k8s_node4_ip: 172.16.82.104
+zcm_k8s_node4_password: abc@123A
+
+
+net_interface: eth0
+zcm_harbor_router_id: 85
+zcm_harbor_admin_password: abc@123A
+zcm_harbor_port: 52800
+
+#### install zcm portal config ####
+
+harbor_registry: 172.16.82.101
+
+zcm_portal_master_ip: 172.16.82.100
+zcm_portal_master_password: abc@123A
+
+zcm_portal_backup_ip: 172.16.82.100
+zcm_portal_backup_password: abc@123A
+
+
+zcm_k8s_master_vip: 172.16.82.101
+
+zcm_portal_router_id: 87
+zcm_collect_namesrv_addrs: 10.45.80.51:9876
+
+zcm_health_keeper_tag: latest
+zcm_config_tag: D_20181203154009 
+zcm_application_tag: C_20190112151058 
+zcm_portal_tag: D_20190113000115
+zcm_resource_tag: C_20190111213724
+zcm_image_tag: D_20190112114236
+zcm_service_tag: C_20190112160135
+zcm_file_manager_tag: latest
+ansible_restful_server_tag: latest
+zcm_tool_tag: D_20181211163015
+zcm_nginx_tag: 1.11.10
+zcm_redis_tag: 3.2.12
+zcm_mysql_tag: 5.7.24
+zcm_ssc_tag: D_20181220165230
+zcm_gateway_tag: latest
+
+#### install zcm k8s config ####
+# global variables
+zcm_k8s_token: zcmk8s.ztesoft123456789
+token: zcmk8s.ztesoft123456789
+submask: 24
+k8s_version: v1.8.3
+apiserver_insecure_port: 52080
+
+kube_master_vip: 172.16.82.101
+
+kube_master1_ip: 172.16.82.101 
+kube_master1_passwd: abc@123A
+
+kube_master2_ip: 172.16.82.101 
+kube_master2_passwd: abc@123A
+
+kube_master3_ip: 172.16.82.101 
+kube_master3_passwd: abc@123A
+
+docker_registry_url: 172.16.82.101
+
+kube_node1_ip: 172.16.82.102
+kube_node1_passwd: abc@123A
+
+kube_node2_ip: 172.16.82.103
+kube_node2_passwd: abc@123A
+
+kube_node3_ip: 172.16.82.100
+kube_node3_passwd: abc@123A
+
+kube_node4_ip: 172.16.82.104
+kube_node4_passwd: abc@123A
+
+k8s_svc_ip: 10.254.0.1
+cluster_dns_ip: 10.254.0.2
+svc_cluster_cidr: "10.254.0.0/16"
+cluster_cidr: "100.80.0.0/16"
+#keepalived_virtual_router_id: 11
+
+etcd_node1_ip: "{{kube_master1_ip}}"
+etcd_node2_ip: "{{zcm_portal_master_ip}}"
+etcd_node3_ip: "{{kube_node1_ip}}"
+etcd_node1_passwd: "{{kube_master1_passwd}}"
+etcd_node2_passwd: "{{zcm_portal_master_password}}"
+etcd_node3_passwd: "abc@123A"
+arbitration_node_ip: "{{kube_node1_ip}}"
+arbitration_node_passwd: "{{kube_node1_passwd}}"
+
+#etcd_cluster: "http://{{kube_master1_ip}}:2379,http://{{kube_master2_ip}}:2379,http://{{kube_node1_ip}}:2379"
+
+

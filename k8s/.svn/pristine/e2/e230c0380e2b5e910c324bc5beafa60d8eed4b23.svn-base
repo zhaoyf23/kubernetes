@@ -1,0 +1,50 @@
+---
+- name: create zcm
+  shell: lvcreate -L 20g vgdata  -n lvzcm 
+
+- name: create zcm  directory
+  shell: mkdir /zcm
+
+- name: create zcm  xfs
+  shell: mkfs.xfs  /dev/vgdata/lvzcm 
+
+- name: mount lvzcm
+  shell: mount -t  xfs /dev/vgdata/lvzcm /zcm 
+
+- name: echo lvzcm to fstab
+  shell: sh -c "echo '/dev/mapper/vgdata-lvzcm /zcm xfs defaults 0 0' >>/etc/fstab "
+
+- name: create lvzlogs 
+  shell: lvcreate -L 200g vgdata  -n lvzlogs 
+
+- name: create zlog  directory
+  shell: mkdir /tmp/zlogs 
+
+- name: create zlogs  xfs
+  shell: mkfs.xfs  /dev/vgdata/lvzlogs 
+
+- name: mount lvzlogs
+  shell: mount -t  xfs /dev/vgdata/lvzlogs /tmp/zlogs 
+
+- name: echo lvzlogs to fstab
+  shell: sh -c "echo '/dev/mapper/vgdata-lvzlogs /tmp/zlogs xfs defaults 0 0' >>/etc/fstab"
+
+
+
+- name: create lvzcore
+  shell: lvcreate -L 200g vgdata  -n lvzcore ;
+
+- name: create zcore  directory
+  shell: mkdir /tmp/zcore 
+
+- name: create zcore  xfs
+  shell: mkfs.xfs  /dev/vgdata/lvzcore
+
+- name: mount lvzcore
+  shell: mount -t  xfs /dev/vgdata/lvzcore /tmp/zcore 
+
+- name: echo lvzcore to fstab
+  shell: sh -c "echo '/dev/mapper/vgdata-lvzcore /tmp/zcore xfs defaults 0 0' >>/etc/fstab "
+
+
+

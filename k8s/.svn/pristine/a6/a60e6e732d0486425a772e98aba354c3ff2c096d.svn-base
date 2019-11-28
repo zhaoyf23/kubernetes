@@ -1,0 +1,40 @@
+---
+# config calico network for k8s
+
+- name: configure calico network
+  template: src=calico.yaml   dest=/etc/kubernetes/
+
+- name: configure calico rbac
+  template: src=rbac.yaml   dest=/etc/kubernetes/
+
+- name: transfer install_net.sh to the second master
+  template: src=install_net.sh   dest=/root/  mode=0755
+
+- name: run a shell to install docker network for the cluster    
+  shell: /root/install_net.sh
+
+#- name: create calico rbac 
+#  command: /bin/kubectl apply -f /etc/kubernetes/rbac.yaml
+#  ignore_errors: True
+
+#- name: start calico network 
+#  command: /bin/kubectl apply -f /etc/kubernetes/calico.yaml
+#  ignore_errors: True
+
+#- name: create calico rbac through insecure port 8080
+#  command: /bin/kubectl --server={{kube_master1_ip}}:{{apiserver_insecure_port}} apply -f /etc/kubernetes/rbac.yaml
+#  ignore_errors: True
+
+#- name: start calico network through insecure port 8080
+#  command: /bin/kubectl --server=http://{{kube_master1_ip}}:{{apiserver_insecure_port}} apply -f /etc/kubernetes/calico.yaml
+#  ignore_errors: True
+
+#- name: update the first master bird_ip for calico 
+#  command: etcdctl update /calico/bgp/v1/host/{{kube_master1_ip}}/ip_addr_v4 {{kube_master1_ip}}
+#  ignore_errors: True
+#
+#- name: update the first master bird_ip for calico 
+#  command: etcdctl update /calico/v1/host/{{kube_master1_ip}}/bird_ip  {{kube_master1_ip}}
+#  ignore_errors: True
+  
+ 

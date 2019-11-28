@@ -1,0 +1,22 @@
+---
+
+- name: create directory
+  file:
+    path: /etc/docker
+    state: directory
+- name: install docker-engine
+  yum: name=docker-engine state=present
+
+- name: config docker daemon
+  template:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+- name: start docker service
+  service: name=docker  enabled=yes
+
+- name: start docker service
+  service: name=docker state=restarted

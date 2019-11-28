@@ -1,0 +1,30 @@
+[program:zcm-config]
+command=/bin/bash -c '. /zcm/supervisor/zcm-env.profile; \
+    [ `docker ps -a -f "name=zcm-config"| wc -l` -gt 1 ] && \
+    exec docker start -a zcm-config || \
+        docker run --name zcm-config \
+        --net=host \
+        -m 2048m --memory-swap=2048m \
+        -p ${ZCM_CONFIG_PORT}:${ZCM_CONFIG_PORT} \
+        -e ZCM_CONFIG_PORT=${ZCM_CONFIG_PORT} \
+        -e SERVER_IP=${ZCM_SERVER_VIP} \
+        -e ZCM_IMAGE_PORT=${ZCM_IMAGE_PORT} \
+        -v /zcm/config:/zcm/config \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /etc/timezone:/etc/timezone:ro \
+        -v /tmp/zlogs:/tmp/zlogs \
+        -v /tmp/zcore:/tmp/zcore \
+        -d \
+        ${ZCM_HARBOR}/${ZCM_HARBOR_PROJECT}/zcm-git:${ZCM_CONFIG_TAG}; \
+    exec docker start -a zcm-config'
+process_name= zcm-config
+numprocs=1
+autostart=true
+autorestart=true
+startretries = 6
+user=root
+stdout_logfile=/var/log/zcm/zcm-config.log
+stdout_logfile_maxbytes=10MB
+stderr_logfile=/var/log/zcm/zcm-config.log
+stderr_logfile_maxbytes=10MB
+stopwaitsecs=20

@@ -1,0 +1,68 @@
+Hostname {{ansible_ssh_host}}
+FQDNLookup false
+Interval 30
+LoadPlugin cpu
+<Plugin cpu>
+  ReportByState true
+  ReportByCpu true
+  ValuesPercentage true
+  ReportNumCpu false
+</Plugin>
+
+LoadPlugin disk
+<Plugin disk>
+</Plugin>
+
+LoadPlugin interface
+LoadPlugin memory
+<Plugin memory>
+  ValuesAbsolute true
+  ValuesPercentage true
+</Plugin>
+
+LoadPlugin processes
+<Plugin processes>
+  Process 1
+  ProcessMatch 1
+</Plugin>
+
+LoadPlugin swap
+<Plugin swap>
+  ReportByDevice false
+  ReportBytes true
+  ValuesAbsolute true
+  ValuesPercentage true
+</Plugin>
+
+LoadPlugin tcpconns
+<Plugin tcpconns>
+  AllPortsSummary true
+</Plugin>
+
+LoadPlugin uptime
+LoadPlugin users
+LoadPlugin df
+<Plugin df>
+  ValuesPercentage true
+  MountPoint "/\/var\/lib\/kubelet\/pods.*/"
+  MountPoint "/\/var\/lib\/docker\/containers.*/"
+  FSType "overlay"
+  FSType "proc"
+  FSType "shm"
+  FSType "tmpfs"
+  FSType "devtmpfs"
+  IgnoreSelected true
+  ReportInodes true
+  ValuesAbsolute true
+</Plugin>
+
+LoadPlugin fhcount
+
+LoadPlugin write_http
+<Plugin write_http>
+<Node "zcm">
+    URL "http://10.45.80.3:80/collectd-post";
+    Format JSON
+    Timeout 5000
+</Node>
+</Plugin>

@@ -1,0 +1,2 @@
+apiserver_insecure_port: 52080
+k8s_master_ip: 172.16.17.123

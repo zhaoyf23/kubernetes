@@ -1,0 +1,18 @@
+---
+#install node-proxy
+
+- name: create conf directory
+  file: path=/zcm/node-proxy state=directory mode=0755
+  
+- name: nginx-template-master.conf
+  template:  src=nginx-template-master.conf dest=/zcm/node-proxy/nginx.conf owner=root   group=root   mode=0755
+
+- name: generate zcm-node-proxy ini
+  copy: 
+    src: zcm-node-proxy.ini
+    dest: /zcm/supervisor/zcm-node-proxy.ini
+  
+- name: Start the node-proxy
+  supervisorctl:
+    name: zcm-node-proxy
+    state: present

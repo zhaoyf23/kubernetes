@@ -1,0 +1,26 @@
+---
+
+- name: create the zcm_tmp directory 
+  file: path=/root/zcm_tmp state=directory mode=0755 
+ 
+- name: cp k8s-master-cluster-roles.yaml and config-k8s-ctl.sh to remote hosts		
+  template:  src={{ item }} dest=/root/zcm_tmp/ owner=root group=root mode=0755
+  with_items:
+    - k8s-master-cluster-roles.yaml
+    - config-k8s-ctl.sh
+
+- name: do the  ClusterRoleBinding 
+  command: /usr/local/bin/kubectl apply -f {{item}}
+  with_items:
+    - /root/zcm_tmp/k8s-master-cluster-roles.yaml
+ 
+##############################
+# Configure master to support automatic certificate renewal  
+- name: run a shell to Configure master to support automatic certificate renewal    
+  shell: cd /root/zcm_tmp && ./config-k8s-ctl.sh 
+ 
+- name: reload the kube-controller-manager service
+  systemd: name=kube-controller-manager state=restarted  daemon_reload=yes
+
+#- name: restart the kube-controller-manager service
+#  service: name=kube-controller-manager state=restarted           

@@ -1,0 +1,17 @@
+# machines list in group
+[kube-masters]
+kube_master1 ansible_ssh_host={{kube_master1_ip}} ansible_become_pass={{kube_master1_passwd}}  ansible_ssh_user={{kube_master1_usr}} ansible_ssh_pass={{kube_master1_passwd}}
+kube_master2 ansible_ssh_host={{kube_master2_ip}} ansible_become_pass={{kube_master2_passwd}}  ansible_ssh_user={{kube_master2_usr}} ansible_ssh_pass={{kube_master2_passwd}}
+kube_master3 ansible_ssh_host={{kube_master3_ip}} ansible_become_pass={{kube_master3_passwd}}  ansible_ssh_user={{kube_master3_usr}} ansible_ssh_pass={{kube_master3_passwd}}
+
+[etcd-nodes]
+etcd-node1  ansible_ssh_host={{etcd_node1_ip}} ansible_become_pass={{etcd_node1_passwd}}  ansible_ssh_user={{etcd_node1_usr}} ansible_ssh_pass={{etcd_node1_passwd}}
+etcd-node2  ansible_ssh_host={{etcd_node2_ip}} ansible_become_pass={{etcd_node2_passwd}}  ansible_ssh_user={{etcd_node2_usr}} ansible_ssh_pass={{etcd_node2_passwd}}
+etcd-node3  ansible_ssh_host={{etcd_node3_ip}} ansible_become_pass={{etcd_node3_passwd}}  ansible_ssh_user={{etcd_node3_usr}} ansible_ssh_pass={{etcd_node3_passwd}}
+
+[kube-nodes]
+node1 ansible_ssh_host={{kube_node1_ip}} ansible_become_pass={{kube_node1_passwd}}  ansible_ssh_user={{kube_node1_usr}} ansible_ssh_pass={{kube_node1_passwd}}
+node2 ansible_ssh_host={{kube_node2_ip}} ansible_become_pass={{kube_node2_passwd}}  ansible_ssh_user={{kube_node2_usr}} ansible_ssh_pass={{kube_node2_passwd}}
+#node3 ansible_ssh_host={{kube_node3_ip}} ansible_become_pass={{kube_node3_passwd}}  ansible_ssh_user={{kube_node3_usr}} ansible_ssh_pass={{kube_node3_passwd}}
+#node4 ansible_ssh_host={{kube_node4_ip}} ansible_become_pass={{kube_node4_passwd}}  ansible_ssh_user={{kube_node4_usr}} ansible_ssh_pass={{kube_node4_passwd}}
+#node5 ansible_ssh_host={{kube_node5_ip}} ansible_become_pass={{kube_node5_passwd}}  ansible_ssh_user={{kube_node5_usr}} ansible_ssh_pass={{kube_node5_passwd}}

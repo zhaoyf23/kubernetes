@@ -1,0 +1,42 @@
+---
+# This playbook install k8s and it's component dns ,docker network 
+
+- hosts: adding-nodes 
+  become: yes
+  roles:
+    - config_timezone
+#    - lvs
+#    - docker_lvs
+#    - prclean_node
+#    - stop_firewalld
+    - config_yum
+#    - install_docker
+#    - grant_docker
+    - install_base_components 
+#    - install_supervisor
+#    - install_collectd
+    - zcm-env-k8s
+    - zcm-file-manager
+    - zcm-config
+    - zcm-health-keeper
+
+- hosts: adding-nodes
+  become: yes
+  roles:
+    - init_all_systems
+
+- hosts: adding-nodes
+  become: yes
+  roles:
+    - install_proxy  
+    - install_adding_nodes
+    
+- hosts: kube-masters[0]
+  become: yes
+  roles:
+    - approve_nodes_cert
+
+- hosts: adding-nodes
+  become: yes
+  roles:
+    - custom_nodes_role

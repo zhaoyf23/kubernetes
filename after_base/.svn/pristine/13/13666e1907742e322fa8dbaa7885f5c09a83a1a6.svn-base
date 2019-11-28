@@ -1,0 +1,25 @@
+---
+
+- shell: free -g |grep Mem|awk '{print $2}'
+  register: mem
+
+- set_fact: memory="{{mem.stdout}}"
+
+- set_fact: num="{{ mem.stdout|int // 2}}"
+  when: memory|int < 128
+  
+- set_fact: num=100
+  when: memory|int >= 128
+
+- name: change the kubelete services
+  template: 
+    src=kubelet.service
+    dest=/etc/systemd/system/
+
+- name: daemon-reload
+  command: systemctl daemon-reload
+
+- name: restart the kubelet service
+  command: systemctl restart kubelet 
+
+ 

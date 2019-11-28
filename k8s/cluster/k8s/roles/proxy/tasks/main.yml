@@ -1,0 +1,23 @@
+---
+#install nginx-proxy
+
+- name: pull the nginx image
+  command: docker pull {{docker_registry_url}}/zcm_k8s/nginx:1.13.7
+
+- name: create the nginx-proxy work directory
+  file: path=/etc/nginx-proxy state=directory mode=0755
+  
+- name: transfer nginx.conf
+  template:  src=nginx.conf  dest=/etc/nginx-proxy/  owner=root   group=root   mode=0755
+  
+- name: custom the k8s master's services
+  template:  src=nginx-proxy.service  dest=/etc/systemd/system/  owner=root   group=root   mode=0755
+    
+- name: daemon-reload
+  command: systemctl daemon-reload
+  
+- name: Start the nginx-proxy service
+  service: name=nginx-proxy state=started enabled=yes
+
+- name: wait for nginx-proxy to start
+  wait_for: port=6443 delay=30  

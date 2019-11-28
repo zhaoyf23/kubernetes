@@ -1,0 +1,13 @@
+[Unit]
+Description=Process Monitoring and Control Daemon
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/supervisord -c /etc/supervisord.conf
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+[zsmart-base]
+name=CentOS-$releasever-zsmart-base
+baseurl=http://{{yum_repo_addr}}:{{yum_port}}/centos/$releasever/os/$basearch/
+gpgcheck=0
+[zcm-updates]
+name=CentOS-$releasever-zsmart-updates
+baseurl=http://{{yum_repo_addr}}:{{yum_port}}/centos/$releasever/update/$basearch/
+gpgcheck=0
+[zcm-extras]
+name=CentOS-$releasever - zsmart-extras
+baseurl=http://{{yum_repo_addr}}:{{yum_port}}/centos/$releasever/extras/$basearch/
+gpgcheck=0
+[zcm-epel]
+name=CentOS-$releasever - zsmart-epel
+baseurl=http://{{yum_repo_addr}}:{{yum_port}}/epel/$releasever/$basearch/

@@ -1,0 +1,80 @@
+---
+#install k8s master
+#Absolute path of mkdir 
+- shell: which mkdir
+  register: var
+- set_fact: var1="{{var.stdout}}"
+- debug: msg="{{var1}}"
+
+- name: install master executable programs
+  yum: name={{ item }}  state=present
+  with_items:
+    - kubectl
+    - kubelet
+    - kube-proxy
+    - kube-scheduler
+    - kube-controller-manager  
+    - kube-apiserver
+     
+
+- name: transfer shell to masters
+  template:
+    src:  k8s-cfg-kubectl.sh
+    dest: /root/
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes    
+
+- name: create kubectl config for the master
+  shell: cd /root/ && ./k8s-cfg-kubectl.sh
+
+- name: transfer shell to masters
+  template:
+    src:  k8s-cfg-client.sh
+    dest: /root/
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes    
+
+- name: create kubelet and kube-proxy config for the master
+  shell: cd /root/ && ./k8s-cfg-client.sh
+
+- name: custom the k8s master's services
+  template:  src={{ item }}  dest=/etc/systemd/system/  owner=root   group=root   mode=0755
+  with_items:
+    - kube-apiserver.service
+    - kube-controller-manager.service
+    - kube-scheduler.service
+    - kube-proxy.service
+    - kubelet.service
+
+- name: create the kubelet work directory
+  file: path=/var/lib/kubelet state=directory mode=0755
+
+- name: create the kube-proxy work directory
+  file: path=/var/lib/kube-proxy state=directory mode=0755
+  
+- name: daemon-reload
+  command: systemctl daemon-reload
+  
+- name: Start the kube-apiserver service
+  service: name=kube-apiserver state=started enabled=yes
+
+- name: Start the kube-controller-manager service
+  service: name=kube-controller-manager state=started enabled=yes  
+ 
+- name: Start the kube-scheduler service
+  service: name=kube-scheduler state=started enabled=yes  
+
+- name: Start the kubelet service
+  service: name=kubelet state=started enabled=yes  
+ 
+- name: Start the kube-proxy service
+  service: name=kube-proxy state=started enabled=yes 
+
+- name: create kubectl config for the master
+  command: /usr/local/bin/kubectl create clusterrolebinding kubelet-bootstrap --clusterrole=system:node-bootstrapper --user=kubelet-bootstrap
+  ignore_errors: yes
+  

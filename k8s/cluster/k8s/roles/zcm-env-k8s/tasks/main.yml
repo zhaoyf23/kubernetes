@@ -1,0 +1,7 @@
+---
+
+- name: import supervisorctl config
+  template:
+    src: zcm-env.profile
+    dest: /zcm/supervisor/zcm-env.profile
+

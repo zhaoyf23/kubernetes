@@ -1,0 +1,11 @@
+# machines list in group
+
+[kube-masters]
+kube_master ansible_ssh_host={{k8s_master_ip}} ansible_ssh_user=root ansible_ssh_pass=abc@123A
+
+[nodes]
+node1 ansible_ssh_host=172.16.82.200  ansible_ssh_user=root ansible_ssh_pass=abc@123A
+#node2 ansible_ssh_host=  ansible_ssh_user=root ansible_ssh_pass=root
+#node3 ansible_ssh_host=  ansible_ssh_user=root ansible_ssh_pass=root
+#172.16.80.31 ansible_ssh_host=172.16.80.31 ansible_ssh_user=root ansible_ssh_pass=1jian8Shu) 
+#172.16.80.32 ansible_ssh_host=172.16.80.32 ansible_ssh_user=root ansible_ssh_pass=1jian8Shu)  

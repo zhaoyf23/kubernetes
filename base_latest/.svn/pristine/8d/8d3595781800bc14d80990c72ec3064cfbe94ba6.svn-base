@@ -1,0 +1,37 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory=/var/lib/kubelet
+ExecStart=/usr/local/bin/kubelet \
+  --bootstrap-kubeconfig=/etc/kubernetes/bootstrap.kubeconfig \
+  --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
+  --address={{ansible_ssh_host}} \
+  --hostname-override={{ansible_ssh_host}} \
+  --pod-infra-container-image=10.45.80.1/zcm_k8s/pause-amd64:3.0 \
+  --cert-dir=/etc/kubernetes/ssl \
+  --cluster-dns=172.18.48.2 \
+  --cluster-domain=tb.zsmart.com. \
+  --hairpin-mode=promiscuous-bridge \
+  --allow-privileged=true \
+  --serialize-image-pulls=false \
+  --logtostderr=true \
+  --cgroup-driver=cgroupfs \
+  --fail-swap-on=false \
+  --network-plugin=cni \
+  --eviction-soft=memory.available<3Gi,nodefs.available<15Gi,imagefs.available<15Gi \
+  --eviction-soft-grace-period=memory.available=30s,nodefs.available=2m,imagefs.available=2m \
+  --eviction-max-pod-grace-period=16 \
+  --system-reserved=cpu=800m,memory=3G \
+  --eviction-hard=memory.available<2Gi,nodefs.available<10Gi,imagefs.available<5Gi \
+  --eviction-pressure-transition-period=1m30s \
+  --kube-reserved=cpu=500m,memory=500Mi, storage=1Gi \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

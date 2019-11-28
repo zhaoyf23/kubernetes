@@ -1,0 +1,29 @@
+---
+# install dns for k8s
+
+- name: create the zcm_tmp directory
+  file: path=/root/zcm_tmp state=directory mode=0755 
+
+- name: cp dns config to the master
+  template:  src={{ item }} dest=/root/zcm_tmp/ owner=root group=root mode=0755
+  with_items:
+    - kube-dns.yaml
+    - dns-horizontal-autoscaler.yaml    
+
+- name: create calico rbac 
+  command: /usr/local/bin/kubectl apply -f {{item}}
+  with_items:
+    - /root/zcm_tmp/kube-dns.yaml
+    - /root/zcm_tmp/dns-horizontal-autoscaler.yaml 
+
+- name: label the master role 
+  command: /usr/local/bin/kubectl label node {{kube_master1_ip}} kubernetes.io/role=master
+  ignore_errors: yes    
+   
+- name: label the master role 
+  command: /usr/local/bin/kubectl label node {{kube_master2_ip}} kubernetes.io/role=master
+  ignore_errors: yes    
+ 
+- name: label the master role
+  command: /usr/local/bin/kubectl label node {{kube_master3_ip}} kubernetes.io/role=master
+  ignore_errors: yes

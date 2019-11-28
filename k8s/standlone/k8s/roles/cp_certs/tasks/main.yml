@@ -1,0 +1,21 @@
+---
+# generate cert by cfss
+
+- name: remove the kubernetes directory  if it already exist
+  file: path=/etc/kubernetes/ssl/* state=absent
+
+- name: cp token.csv to init_all_system/ssl/token.csv
+  copy:  src=/root/cert_for_{{prj}}/ssl/token.csv  dest=roles/init_all_systems/files/ssl/token.csv  owner=root group=root  mode=0755 force=yes
+
+- name: cp pem to playbook's ssl/
+  copy:  src=/root/cert_for_{{prj}}/ssl/  dest=roles/init_all_systems/files/ssl/  owner=root   group=root   mode=0755 force=yes
+  with_items:
+    - ca.pem
+    - admin.pem
+    - kube-proxy.pem
+    - kubernetes.pem  
+    - ca-key.pem
+    - admin-key.pem
+    - etcd-key.pem
+    - kube-proxy-key.pem
+    - kubernetes-key.pem 

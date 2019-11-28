@@ -1,0 +1,23 @@
+---
+# generate cert by cfss
+
+
+# config etcd-csr.json
+- name: transfer gen-cert.sh
+  template:
+    src:  gen-cert.sh
+    dest: /root/cert_for_{{prj}}/gen-cert.sh
+    owner: root
+    group: root
+    mode: 0755
+    backup: yes
+    
+# generate all the certs 
+- name: run a shell to generate all the certs    
+  shell: cd /root/cert_for_{{prj}} && ./gen-cert.sh 
+ 
+- name: move all the pem files to ssl directory
+  shell: cd /root/cert_for_{{prj}}/ && mv *.pem ./ssl/
+
+- name: change perm of files in ssl directory 
+  file: dest=/root/cert_for_{{prj}}/ssl mode=0655  recurse=yes
